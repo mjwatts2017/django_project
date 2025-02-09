@@ -1,2 +1,3 @@
 __pycache__/
 *.pyc
+django_project/path_visualization_app/__pycache__/urls.cpython-313.pyc
