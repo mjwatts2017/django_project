@@ -12,12 +12,27 @@
         .grid-item {
             width: 20px;
             height: 20px;
-            background-color: #eee;
+            background-color: #858282;
         }
+
+        .start {
+            background-color: rgb(58, 180, 58);  /* Color for start cell */
+        }
+        .finish {
+            background-color: rgb(182, 63, 63);    /* Color for finish cell */
+        }
+        
     </style>
 </head>
 <body>
     <h1>Color Grid</h1>
+
+    <div>
+        <button id="start-btn">Select Start</button>
+        <button id="finish-btn">Select Finish</button>
+        <button id="a-star-algorithm">A* Shortest Path</button>
+    </div>
+
     <div class="grid-container" id="grid-container">
         {% for row in grid %}
             {% for cell in row %}
@@ -25,18 +40,58 @@
             {% endfor %}
         {% endfor %}
     </div>
-    <button id="change-color-btn">Change Color</button>
+    
 
     <script>
-        const button = document.getElementById('change-color-btn');
-        const gridItems = document.querySelectorAll('.grid-item');
 
-        button.addEventListener('click', () => {
-            gridItems.forEach(item => {
-                const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
-                item.style.backgroundColor = randomColor;
+        // const cells = document.querySelectorAll('.grid-item');
+        // cells.forEach(cell => {
+        //     cell.addEventListener('click', () => {
+        //         cell.style.backgroundColor = cell.style.backgroundColor === 'red' ? '' : 'red';
+        //     });
+        // });
+
+        let startCell = null;
+        let finishCell = null;
+
+        const startButton = document.getElementById('start-btn');
+        const finishButton = document.getElementById('finish-btn');
+        const cells = document.querySelectorAll('.grid-item');
+
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (startButton.classList.contains('active')) {
+                    // Clear previously selected cell
+                    if (startCell) {
+                        startCell.classList.remove('start');
+                    }
+                    startCell = cell;
+                    startCell.classList.add('start');
+                } else if (finishButton.classList.contains('active')) {
+                    // Clear previously selected cell
+                    if (finishCell) {
+                        finishCell.classList.remove('finish');
+                    }
+                    finishCell = cell;
+                    finishCell.classList.add('finish');
+                }
             });
         });
+
+
+        startButton.addEventListener('click', () => {
+            startButton.classList.toggle('active');
+            finishButton.classList.remove('active');
+        });
+
+        finishButton.addEventListener('click', () => {
+            finishButton.classList.toggle('active');
+            startButton.classList.remove('active');
+        });
+        
+
     </script>
+
 </body>
 </html>
