@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from path_visualization_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("path_visualization_app.urls"))
+    path("", include("path_visualization_app.urls")),  # The grid view
+    path('find-path/', views.find_shortest_path, name='find_path'),
 ]

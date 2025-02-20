@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from .views import find_shortest_path, grid_view
 
 urlpatterns = [
-    path("", views.home, name="home")
+    path('', grid_view, name='grid_view'),  # Main page to view grid
+    path('find-path/', find_shortest_path, name='find_path'),
 ]

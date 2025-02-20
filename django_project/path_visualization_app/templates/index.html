@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .grid { display: grid; grid-template-columns: repeat(10, 30px); gap: 2px; }
+        .cell { width: 30px; height: 30px; border: 1px solid black; text-align: center; }
+        .start { background-color: green; }
+        .end { background-color: red; }
+        .path { background-color: yellow; }
+    </style>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <h1>Pathfinder</h1>
+    <div class="grid"></div>
+    <button id="findPath">Find Path</button>
+    <script>
+        const gridSize = 10;
+        let grid = Array.from({length: gridSize}, () => Array(gridSize).fill(0));
+        let start = null, end = null;
+
+        function createGrid() {
+            const gridContainer = $(".grid").empty();
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    const cell = $("<div>").addClass("cell").data("pos", [r, c]);
+                    cell.click(function() {
+                        if (!start) { start = [r, c]; $(this).addClass("start"); }
+                        else if (!end) { end = [r, c]; $(this).addClass("end"); }
+                    });
+                    gridContainer.append(cell);
+                }
+            }
+        }
+        $(document).ready(function () {
+            // Get CSRF token from meta tag
+            var csrftoken = $("meta[name='csrf-token']").attr("content");
+
+            $("#findPath").click(function () {
+                if (!start || !end) {
+                    alert("Select start and end points");
+                    return;
+                }
+                $.ajax({
+                    url: "find-path/",
+                    method: "POST",
+                    contentType: "application/json",
+                    headers: { "X-CSRFToken": csrftoken },  // Include CSRF token in headers
+                    data: JSON.stringify({ grid, start, end }),
+                    success: function (response) {
+
+                        if (!response.path || !Array.isArray(response.path)) {
+                            showError("Invalid response from the server.");
+                            return;
+                        }
+
+                        $(".cell").removeClass("path");
+                        response.path.forEach(([r, c]) => {
+                            $(".grid .cell").eq(r * gridSize + c).addClass("path");
+                        });
+                    },
+                    error: function (xhr) {
+                        console.error("Error:", "hello");
+                    }
+                });
+            });
+        });
+
+        $(document).ready(createGrid);
+    </script>
+</body>
+</html>
