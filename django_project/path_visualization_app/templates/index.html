@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathfinder</title>
+    <title>Shortest Path Visualization</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .grid { display: grid; grid-template-columns: repeat(10, 30px); gap: 2px; }
@@ -15,7 +15,7 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
 </head>
 <body>
-    <h1>Pathfinder</h1>
+    <h1>Shortest Path Visualization</h1>
     <div class="grid"></div>
     <button id="findPath">Find Path</button>
     <script>
@@ -59,8 +59,11 @@
                         }
 
                         $(".cell").removeClass("path");
-                        response.path.forEach(([r, c]) => {
-                            $(".grid .cell").eq(r * gridSize + c).addClass("path");
+                        response.path.forEach(([r, c], i) => {
+                            setTimeout(function (){
+                                $(".grid .cell").eq(r * gridSize + c).addClass("path");
+                                }, i*1000);
+                            
                         });
                     },
                     error: function (xhr) {
